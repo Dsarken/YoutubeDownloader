@@ -1,0 +1,4 @@
+Pillow==9.4.0
+Pillow==9.5.0
+Requests==2.29.0
+yt_dlp==2023.3.4

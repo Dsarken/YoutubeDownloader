@@ -12,7 +12,7 @@ resolutions = []  # global list
 thumbnail = None  # define thumbnail as a global variable
 
 
-def abbreviate_number(number):
+def abbreviate_number(number):  # To properly format
     if number >= 1000000000:
         return '{:.2f}{}'.format(number / 1000000000, 'B')
     elif number >= 1000000:
