@@ -217,7 +217,7 @@ get_button.grid(row=1, column=2)
 
 var = tk.StringVar(root)
 var.set("Quality")
-
+# Dropdown menu for quality options
 om = ttk.OptionMenu(root, var, "Quality")
 om.grid(row=2, column=0)
 
@@ -227,7 +227,7 @@ download_button.grid(row=2, column=1)
 # Clear input
 clear_button = ttk.Button(root, text="Clear Input", command=clear_entry)
 clear_button.grid(row=2, column=2)
-
+# Checkbox if user wants to download only audio
 audio_only_checkbox = ttk.Checkbutton(
     root, text="Download only Audio", variable=checkbox_var, onvalue="Yes", offvalue="No")
 audio_only_checkbox.grid(row=3, columnspan=4)
