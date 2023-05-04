@@ -8,12 +8,12 @@ This project was created as an example of how to use yt_dlp module and tkinter G
 
 ## Installation
 
-To run this script, you need to have Python 3 installed on your system. You also need to install yt_dlp module using pip:
+To run this script, you need to have Python 3 installed on your system. You also need to install the requirements.txt file using pip:
 
-
-`pip install yt_dlp`
+`pip install requirements.txt`
 
 # Usage
+
 To use this script, follow these steps:
 
 Clone or download this repository to your local machine.
