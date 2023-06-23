@@ -31,7 +31,6 @@ def clear_entry():
 
 
 def get_video():  # new function to get video info
-
     global resolutions, thumbnail, video_regex, playlist_regex  # global variables
     # regex to check if url is valid video
     video_regex = r"^(?:https?:\/\/)?(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-_]+)(&\S+)?$"
@@ -206,7 +205,7 @@ url_example = tk.Label(
                "https://www.youtube.com/playlist?list=PLRfY4Rc-GWzhdCvSPR7aTV0PJjjiSAGMs")
 url_example.grid(row=0, column=0, columnspan=4)
 # Enter youtube video url here
-url_label = tk.Label(root, text="Enter url for youtube video:")
+url_label = tk.Label(root, text="Enter URL for youtube video:")
 url_label.grid(row=1, column=0)
 
 url_entry = ttk.Entry(root)
