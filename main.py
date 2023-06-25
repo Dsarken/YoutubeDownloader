@@ -236,43 +236,52 @@ root = tk.Tk()
 style = ttk.Style()
 style.theme_use("vista")
 root.title("Youtube Video Downloader")
+
 checkbox_var = tk.StringVar(value='No')  # Audio only checkbox variable
 is_playlist_var = tk.StringVar(value='No')  # Playlist checkbox variable
+
 # Creating a label for url entry
 url_example = tk.Label(
-    root, text="Example Single Video URL: https: //www.youtube.com/watch?v=fSjc8vLMg8c\nExample Playlist URL: "
-               "https://www.youtube.com/playlist?list=PLRfY4Rc-GWzhdCvSPR7aTV0PJjjiSAGMs")
-url_example.grid(row=0, column=0, columnspan=4)
+    root, text="Example Single Video URL: https://www.youtube.com/watch?v=fSjc8vLMg8c\nExample Playlist URL: "
+               "https://www.youtube.com/playlist?list=PLRfY4Rc-GWzhdCvSPR7aTV0PJjjiSAGMs"
+)
+url_example.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+
 # Enter youtube video url here
 url_label = tk.Label(root, text="Enter URL for youtube video:")
-url_label.grid(row=1, column=0)
+url_label.grid(row=1, column=0, padx=10, pady=10, sticky="e")
 
 url_entry = ttk.Entry(root)
-url_entry.grid(row=1, column=1)
+url_entry.grid(row=1, column=1, padx=10, pady=10)
+
 # Retrieve video info
 get_button = ttk.Button(root, text="Get Video Info", command=get_video)
-get_button.grid(row=1, column=2)
+get_button.grid(row=1, column=2, padx=10, pady=10)
 
 var = tk.StringVar(root)
 var.set("Quality")
+
 # Dropdown menu for quality options
 om = ttk.OptionMenu(root, var, "Quality")
-om.grid(row=2, column=0)
+om.grid(row=2, column=0, padx=10, pady=10)
 
 download_button = ttk.Button(
     root, text="Download Video", command=download_video)
-download_button.grid(row=2, column=1)
+download_button.grid(row=2, column=1, padx=10, pady=10)
+
 # Clear input
 clear_button = ttk.Button(root, text="Clear Input", command=clear_entry)
-clear_button.grid(row=2, column=2)
-#
+clear_button.grid(row=2, column=2, padx=10, pady=10)
+
 history_button = ttk.Button(
     root, text="View Download History", command=show_download_history)
-history_button.grid(row=3, column=0)
+history_button.grid(row=3, column=0, padx=10, pady=10, sticky="w")
 
 # Checkbox if user wants to download only audio
 audio_only_checkbox = ttk.Checkbutton(
-    root, text="Download only Audio", variable=checkbox_var, onvalue="Yes", offvalue="No")
-audio_only_checkbox.grid(row=3, columnspan=4)
+    root, text="Download only Audio", variable=checkbox_var, onvalue="Yes", offvalue="No"
+)
+audio_only_checkbox.grid(row=3, column=1, columnspan=3,
+                         padx=10, pady=10, sticky="w")
 
 root.mainloop()
