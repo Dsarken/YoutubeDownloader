@@ -1,3 +1,4 @@
+from datetime import datetime
 import yt_dlp
 import tkinter as tk
 from tkinter import ttk
@@ -28,6 +29,41 @@ def clear_entry():
     menu = om['menu']  # get option menu menu
     menu.delete(0, 'end')  # delete previous option
     var.set("Quality")
+
+
+def save_download_history(video_info):
+    with open('download_history.txt', 'a', encoding='utf-8') as file:
+        file.write(','.join(video_info) + '\n')
+
+
+def show_download_history():
+    try:
+        with open('download_history.txt', 'r', encoding='utf-8') as file:
+            download_history = file.readlines()
+
+        popup = tk.Toplevel(root)
+        popup.title("Download History")
+
+        text_widget = tk.Text(popup, width=60, height=10)
+        text_widget.pack()
+
+        for entry in download_history:
+            video_info = entry.strip().split(',')
+            text_widget.insert(tk.END, "Playlist Title: " +
+                               video_info[0] + "\n")
+            text_widget.insert(
+                tk.END, "Playlist length: " + video_info[1] + "\n")
+            text_widget.insert(tk.END, "Channel Name: " + video_info[2] + "\n")
+            text_widget.insert(
+                tk.END, "Time downloaded: " + video_info[3] + "\n")
+            text_widget.insert(tk.END, "\n")
+
+        text_widget.configure(state='disabled')
+
+        popup_button = ttk.Button(popup, text="OK", command=popup.destroy)
+        popup_button.pack(pady=10)
+    except FileNotFoundError:
+        print("Download history file not found.")
 
 
 def get_video():  # new function to get video info
@@ -180,6 +216,9 @@ def download_video():
 
         with ydl:
             ydl.extract_info(URL, download=True)
+    # Save video information to download history
+    video_info = [URL, title, resolution, str(datetime.now())]
+    save_download_history(video_info)
 
     print("Download complete!")
 
@@ -226,6 +265,11 @@ download_button.grid(row=2, column=1)
 # Clear input
 clear_button = ttk.Button(root, text="Clear Input", command=clear_entry)
 clear_button.grid(row=2, column=2)
+#
+history_button = ttk.Button(
+    root, text="View Download History", command=show_download_history)
+history_button.grid(row=3, column=0)
+
 # Checkbox if user wants to download only audio
 audio_only_checkbox = ttk.Checkbutton(
     root, text="Download only Audio", variable=checkbox_var, onvalue="Yes", offvalue="No")
