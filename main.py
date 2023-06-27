@@ -161,74 +161,43 @@ def get_video():  # new function to get video info
 
 def download_video():
     print(checkbox_var.get())
-    # get the title of the video
     URL = url_entry.get()
     common_opts = {
         'extractor-args': 'youtube:player_client=android',
         'noplaylist': True,
     }
-
     ydl = yt_dlp.YoutubeDL(common_opts)
-    title = ydl.extract_info(URL, download=False)['title']
-
-    # replace invalid characters in the title
+    video_info = ydl.extract_info(URL, download=False)
+    title = video_info['title']
     title = "".join(x for x in title if x.isalnum() or x in [" ", "-", "_"])
 
-    if playlist_regex and checkbox_var.get() == "No":
-        ydl = yt_dlp.YoutubeDL({
-            **common_opts,
-            'outtmpl': f'{title}%(playlist_index)s - %(title)s.%(ext)s',
-        })
-
-        resolution = var.get()  # get selected resolution from variable
-        print(f"Downloading playlist with resolution {resolution}")
-
-        with ydl:
-            ydl.download([URL])
-
-    elif video_regex and checkbox_var.get() == "No":
-        ydl = yt_dlp.YoutubeDL({
+    if checkbox_var.get() == "No":
+        resolution = var.get()
+        ydl_opts = {
             **common_opts,
             'outtmpl': f'{title}.mp4',
-            'noplaylist': False,
-        })
-
-        resolution = var.get()  # get selected resolution from variable
-        print(f"Downloading video with resolution {resolution}")
-
-        with ydl:
-            stream = ydl.extract_info(URL, download=False)['formats'][0]
-            for f in ydl.extract_info(URL, download=False)['formats']:
-                if f['format_note'] == resolution:
-                    stream = f
-                    break
-
-            filename = ydl.prepare_filename(stream)
-            ydl.download([stream['url']])
-
-    elif checkbox_var.get() == "Yes":
-        print("Downloading audio only")
-
-        ydl = yt_dlp.YoutubeDL({
-            **common_opts,
-            'outtmpl': f'{title}',  # Remove the ".mp3" extension
-            'format': 'bestaudio/best',  # Use the best audio format
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',  # Extract audio as MP3
-                # Set audio quality (bitrate: 192 kbps)
-                'preferredquality': '192',
-            }],
-        })
-
-        with ydl:
+            'format': resolution + '+bestaudio/best',
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([URL])
-
-        # Save video information to download history
-        video_info = [URL, title, "Audio Only", str(datetime.now())]
+        video_info = [URL, title, "Video + Audio", str(datetime.now())]
         save_download_history(video_info)
 
-    print("Download complete!")
+    elif checkbox_var.get() == "Yes":
+        ydl_opts = {
+            **common_opts,
+            'outtmpl': f'{title}',
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+        }
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([URL])
+        video_info = [URL, title, "Audio Only", str(datetime.now())]
+        save_download_history(video_info)
 
     # create a pop-up window to indicate that the download has finished
     popup = tk.Toplevel(root)
