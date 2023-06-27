@@ -49,11 +49,11 @@ def show_download_history():
 
         for entry in download_history:
             video_info = entry.strip().split(',')
-            text_widget.insert(tk.END, "Playlist Title: " +
+            text_widget.insert(tk.END, "Video Link: " +
                                video_info[0] + "\n")
             text_widget.insert(
-                tk.END, "Playlist length: " + video_info[1] + "\n")
-            text_widget.insert(tk.END, "Channel Name: " + video_info[2] + "\n")
+                tk.END, "Video Title: " + video_info[1] + "\n")
+            text_widget.insert(tk.END, "Format: " + video_info[2] + "\n")
             text_widget.insert(
                 tk.END, "Time downloaded: " + video_info[3] + "\n")
             text_widget.insert(tk.END, "\n")
@@ -160,6 +160,7 @@ def get_video():  # new function to get video info
 
 
 def download_video():
+    print(checkbox_var.get())
     # get the title of the video
     URL = url_entry.get()
     common_opts = {
@@ -173,7 +174,7 @@ def download_video():
     # replace invalid characters in the title
     title = "".join(x for x in title if x.isalnum() or x in [" ", "-", "_"])
 
-    if playlist_regex:
+    if playlist_regex and checkbox_var.get() == "No":
         ydl = yt_dlp.YoutubeDL({
             **common_opts,
             'outtmpl': f'{title}%(playlist_index)s - %(title)s.%(ext)s',
@@ -185,7 +186,7 @@ def download_video():
         with ydl:
             ydl.download([URL])
 
-    elif video_regex:
+    elif video_regex and checkbox_var.get() == "No":
         ydl = yt_dlp.YoutubeDL({
             **common_opts,
             'outtmpl': f'{title}.mp4',
@@ -205,20 +206,27 @@ def download_video():
             filename = ydl.prepare_filename(stream)
             ydl.download([stream['url']])
 
-    elif checkbox_var.get() == 'Yes':
+    elif checkbox_var.get() == "Yes":
         print("Downloading audio only")
 
         ydl = yt_dlp.YoutubeDL({
             **common_opts,
-            'outtmpl': f'{title}.mp4',
-            'format': 'bestaudio',
+            'outtmpl': f'{title}',  # Remove the ".mp3" extension
+            'format': 'bestaudio/best',  # Use the best audio format
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',  # Extract audio as MP3
+                # Set audio quality (bitrate: 192 kbps)
+                'preferredquality': '192',
+            }],
         })
 
         with ydl:
-            ydl.extract_info(URL, download=True)
-    # Save video information to download history
-    video_info = [URL, title, resolution, str(datetime.now())]
-    save_download_history(video_info)
+            ydl.download([URL])
+
+        # Save video information to download history
+        video_info = [URL, title, "Audio Only", str(datetime.now())]
+        save_download_history(video_info)
 
     print("Download complete!")
 
