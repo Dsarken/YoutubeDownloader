@@ -1,6 +1,6 @@
 # Youtube Video Downloader
 
-This is a simple Python script that allows you to download YouTube videos in different resolutions using yt_dlp module.
+This is a simple Python program that allows you to download YouTube videos in different resolutions using yt_dlp module.
 
 ## Motivation
 
